@@ -5,6 +5,8 @@ const Producto = require("../modelos/producto");
 function socket(io){
     io.on("connection",(socket)=>{
         mostrarUsuarios();
+        
+
         //MOSTRAR USUARIOS
         async function mostrarUsuarios(){
             try{
@@ -46,6 +48,17 @@ function socket(io){
 
 //---------------productos-----------
 
+// Mostrar productos
+mostrarProductos();
+async function mostrarProductos() {
+    try {
+        const productos = await Producto.find();
+        io.emit("servidorEnviarProductos", productos);
+    } catch (err) {
+        console.log("Error al obtener los productos");
+    }
+}
+
         // Agregar productos
 socket.on("clienteGuardarProducto", async (producto) => {
     try {
@@ -73,15 +86,6 @@ socket.on("clienteBorrarProducto", async (id) => {
     mostrarProductos();
 });
 
-// Mostrar productos
-async function mostrarProductos() {
-    try {
-        const productos = await Producto.find();
-        io.emit("servidorEnviarProductos", productos);
-    } catch (err) {
-        console.log("Error al obtener los productos");
-    }
-}
 
 
     });
